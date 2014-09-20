@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>visual paradigm- camCar</title>
+  <link rel="stylesheet" href="css/demo.css">
+    <script language="JavaScript" src="lib/jquery.min.js"></script>
+  <script src="lib/tracking/tracking-min.js"></script>
+  <script src="lib/tracking/assets/stats.min.js"></script>
+  <script src="lib/tracking/assets/color_camera_gui.js"></script>
+  <link rel="stylesheet" href="css/race.css">
+</head>
+<body>
+
+  <div class="demo-frame">
+    <div class="demo-container">
+      <video id="video" width="180" height="135" preload autoplay loop muted controls></video>
+      <canvas id="canvas" width="180" height="135"></canvas>
+    </div>
+  </div>
+  <div id="container">
+      <div id="canvasContainer">
+          <canvas id="raceTrack" width="1000" height="600" class="border canvas"></canvas>
+      </div>
+      <div id="statsContainer" style="display:none;">
+          <div class="border box">
+              Speed: <span id="speed" class="b">0.00</span> px/f <br>
+              Time: <span id="time" class="b">0.00</span> s <br>
+              Lap time <span id="lapTime" class="b">0.00</span> s <br>
+              Nr. of laps: <span id="nrLaps" class="b">0</span> <br>
+              <hr>
+              Lap times: <ol id="lapTimes" class="lapList"></ol>
+          </div>
+          <div class="border box">
+              Car: <select name="selectCar" onchange=""><option value="car1">Capsule</option></select><br>
+              Track: <select name="selectTrack" onchange="selectTrack();"></select>
+          </div>
+          <div class="border box">
+              FPS: <span id="fps"></span>
+          </div>
+      </div>
+  </div>
+  <div class="hidden"><img id="track"><img id="hiddenTrack"><canvas id="hiddenCanvas" width="750" height="500"></canvas></div>
+  <script src='js/race.js'></script>
+  <script>
+      win=window;
+      window.onload = function() {
+          var video = document.getElementById('video');
+          var canvas = document.getElementById('canvas');
+          var context = canvas.getContext('2d');
+
+          var tracker = new tracking.ColorTracker(['yellow','magenta']);
+
+          tracking.track('#video', tracker, { camera: true });
+
+          tracker.on('track', function(event) {
+              context.clearRect(0, 0, canvas.width, canvas.height);
+              event.data.forEach(function(rect) {
+                  if (rect.color === 'custom') {
+                      rect.color = tracker.customColor;
+                  }
+                  console.log(rect.color);
+                  if(rect.color==="yellow"){
+                      steerLeft()
+                  }else if(rect.color==="magenta"){
+                      steerRight();
+                  }
+              });
+          });
+
+          initGUIControllers(tracker);
+      };
+  </script>
+</body>
+</html>
