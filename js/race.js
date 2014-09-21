@@ -534,7 +534,7 @@ var f, fpsTime, fpsElement = document.getElementById('fps');
 var debug = false;
 
 // Load track
-loadTrack(1);
+loadTrack(0);
 
 // Select track
 var selected, 
